@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>승진 의사결정 설문조사</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667788 0%, #556677 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #556677;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #6c757d;
+            font-size: 22px;
+            margin: 30px 0 20px 0;
+        }
+
+        .intro-text {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #556677;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #6c757d;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .input-group span {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-option:hover {
+            background: #f8f9fa;
+            border-color: #6c757d;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .radio-option.selected {
+            background: #e9ecef;
+            border-color: #6c757d;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #556677;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .likert-option {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 8px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .likert-option:hover {
+            background: #f0f0f0;
+            border-color: #6c757d;
+        }
+
+        .likert-option input[type="radio"] {
+            display: none;
+        }
+
+        .likert-option.selected {
+            background: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+
+        .scenario-box {
+            background: #fff3e0;
+            padding: 25px 10px 25px 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #ff9800;
+        }
+
+        .scenario-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #555555;
+            margin-bottom: 15px;
+        }
+
+        .scenario-condition {
+            margin: 12px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .scenario-condition strong {
+            color: #6c757d;
+            color: #6c757d;
+        }
+
+        .slider-container {
+            margin: 25px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #6c757d;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #6c757d;
+            cursor: pointer;
+            border: none;
+        }
+
+        .slider-value {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6c757d 0%, #556677 100%);
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6c757d 0%, #556677 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        .btn-group-center {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .completion-icon {
+            text-align: center;
+            font-size: 80px;
+            color: #4caf50;
+            margin: 30px 0;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1565c0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .likert-scale {
+                flex-direction: column;
+            }
+
+            .likert-option {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 페이지 1: 안내 -->
+        <div class="page active" id="page-intro">
+            <h1>보수제도 변경 시 승진 의사결정 설문조사</h1>
+            <div class="intro-text">
+                <p><strong>안녕하십니까.</strong></p>
+                <p style="margin-top: 15px;">
+                    본 조사는 <strong>보수 및 인사제도 변경 시 근로자의 승진 의사결정 변화를 탐색하기 위한 설문</strong>입니다.
+                </p>
+                <p style="margin-top: 15px;">
+                    본 설문은 공공기관 4직급 직원이 3직급(초급간부)로 승진할 때 다양한 제도적 조건들이 
+                    승진 의향에 미치는 영향을 알아보기 위해 설계되었습니다.
+                </p>
+                <p style="margin-top: 15px;">
+                    설문은 약 15-20분 정도 소요되며, 여러분의 솔직한 응답이 연구에 큰 도움이 됩니다.
+                </p>
+            </div>
+            <div class="btn-group-center">
+                <button class="btn btn-primary" onclick="nextPage()">시작하기</button>
+            </div>
+        </div>
+
+        <!-- 페이지 2: 동의 -->
+        <div class="page" id="page-consent">
+            <h1>연구 참여 동의</h1>
+            <div class="intro-text">
+                <p><strong>개인정보 보호 및 연구 윤리</strong></p>
+                <p style="margin-top: 15px;">
+                    • 응답은 <strong>완전히 익명</strong>으로 수집되며, 개인을 식별할 수 있는 정보는 수집되지 않습니다.
+                </p>
+                <p style="margin-top: 10px;">
+                    • 수집된 자료는 <strong>연구 목적으로만</strong> 활용되며, 통계적으로 처리되어 발표됩니다.
+                </p>
+                <p style="margin-top: 10px;">
+                    • 본 설문 참여는 자발적이며, 언제든지 참여를 중단하실 수 있습니다.
+                </p>
+                <p style="margin-top: 10px;">
+                    • 연구 결과는 학술적 목적으로만 사용됩니다.
+                </p>
+            </div>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label class="radio-option" onclick="selectConsent(true)">
+                        <input type="radio" name="consent" value="agree">
+                        <span>위 내용을 이해하였으며, 설문에 참여하는 것에 동의합니다.</span>
+                    </label>
+                    <label class="radio-option" onclick="selectConsent(false)">
+                        <input type="radio" name="consent" value="disagree">
+                        <span>동의하지 않습니다.</span>
+                    </label>
+                </div>
+                <p class="error-message" id="consent-error">참여 동의 여부를 선택해주세요.</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button class="btn btn-primary" onclick="checkConsent()">다음</button>
+            </div>
+        </div>
+
+        <!-- 페이지 3: 기본정보 -->
+        <div class="page" id="page-demographics">
+            <h1>기본 정보</h1>
+            <p style="color: #666; margin-bottom: 20px;">귀하의 기본 정보를 입력해주세요.</p>
+
+            <div class="form-group">
+                <label>1. 소속 기관</label>
+                <select id="organization" required>
+                    <option value="">선택하세요</option>
+                    <option value="한국남부발전">한국남부발전</option>
+                    <option value="한국수력원자력">한국수력원자력</option>
+                    <option value="한국전력공사">한국전력공사</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>2. 현재 직급</label>
+                <select id="grade" required>
+                    <option value="">선택하세요</option>
+                    <option value="4급">4급</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>3. 직종</label>
+                <select id="job-type" onchange="toggleJobTypeOther()" required>
+                    <option value="">선택하세요</option>
+                    <option value="사무직">사무직</option>
+                    <option value="생산직">생산직</option>
+                    <option value="기술직">기술직</option>
+                    <option value="연구직">연구직</option>
+                    <option value="기타">기타</option>
+                </select>
+                <input type="text" id="job-type-other" placeholder="직종을 입력하세요" style="margin-top: 10px; display: none;">
+            </div>
+
+            <div class="form-group">
+                <label>4. 재직 기간</label>
+                <div class="input-group">
+                    <input type="number" id="years" placeholder="연수" min="0" max="50" required>
+                    <span>년</span>
+                    <input type="number" id="months" placeholder="개월" min="0" max="11" required>
+                    <span>개월</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>5. 출생연도 (예: 1985)</label>
+                <input type="number" id="birth-year" placeholder="YYYY" min="1940" max="2010" required>
+            </div>
+
+            <div class="form-group">
+                <label>6. 성별</label>
+                <select id="gender" required>
+                    <option value="">선택하세요</option>
+                    <option value="남">남</option>
+                    <option value="여">여</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>7. 최종 정규 교육</label>
+                <select id="education" required>
+                    <option value="">선택하세요</option>
+                    <option value="고등학교 졸업">고등학교 졸업</option>
+                    <option value="대학교 졸업">대학교 졸업</option>
+                    <option value="석사 졸업">석사 졸업</option>
+                    <option value="박사 졸업">박사 졸업</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>8. 혼인 여부</label>
+                <select id="marital-status" required>
+                    <option value="">선택하세요</option>
+                    <option value="미혼">미혼</option>
+                    <option value="기혼">기혼</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>9. 자녀 수</label>
+                <select id="children" required>
+                    <option value="">선택하세요</option>
+                    <option value="없음">없음</option>
+                    <option value="1명">1명</option>
+                    <option value="2명">2명</option>
+                    <option value="3명 이상">3명 이상</option>
+                </select>
+            </div>
+
+            <p class="error-message" id="demographics-error">모든 항목을 입력해주세요.</p>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button class="btn btn-primary" onclick="validateDemographics()">다음</button>
+            </div>
+        </div>
+
+        <!-- 페이지 4: 설문 A -->
+        <div class="page" id="page-survey-a">
+            <h1>일반 설문 (1/4)</h1>
+            <div class="progress-text">전체 진행률: 10%</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 10%"></div>
+            </div>
+            <p style="color: #666; margin-bottom: 20px; font-weight: bold;">
+                Ⅰ. 다음은 귀하의 <strong>직무 동기</strong>를 파악하기 위한 문항입니다. 귀하의 생각과 가장 가까운 곳에 표시해주십시오.
+            </p>
+
+            <div class="question" data-question="A1">
+                <div class="question-text">A1. [업무 성취감] 나는 내가 하는 직무를 성공적으로 수행하였을 때 보람을 느낀다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'A1', 1)">
+                        <input type="radio" name="A1" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A1', 2)">
+                        <input type="radio" name="A1" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A1', 3)">
+                        <input type="radio" name="A1" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A1', 4)">
+                        <input type="radio" name="A1" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A1', 5)">
+                        <input type="radio" name="A1" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="A2">
+                <div class="question-text">A2. [봉급] 나는 직장생활에서 보수가 매우 중요한 요인 중 하나라고 생각한다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'A2', 1)">
+                        <input type="radio" name="A2" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A2', 2)">
+                        <input type="radio" name="A2" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A2', 3)">
+                        <input type="radio" name="A2" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A2', 4)">
+                        <input type="radio" name="A2" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A2', 5)">
+                        <input type="radio" name="A2" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="A3">
+                <div class="question-text">A3. [승진] 승진 가능성은 내가 업무를 몰입하는데 중요한 요인이다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'A3', 1)">
+                        <input type="radio" name="A3" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A3', 2)">
+                        <input type="radio" name="A3" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A3', 3)">
+                        <input type="radio" name="A3" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A3', 4)">
+                        <input type="radio" name="A3" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A3', 5)">
+                        <input type="radio" name="A3" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="A4">
+                <div class="question-text">A4. [사회적 인정] 나는 다른 사람들이 나를 인정해주는 것에 강한 의욕을 느낀다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'A4', 1)">
+                        <input type="radio" name="A4" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A4', 2)">
+                        <input type="radio" name="A4" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A4', 3)">
+                        <input type="radio" name="A4" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A4', 4)">
+                        <input type="radio" name="A4" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'A4', 5)">
+                        <input type="radio" name="A4" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <p class="error-message" id="survey-a-error">모든 문항에 답변해주세요.</p>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button class="btn btn-primary" onclick="validateSurveyA()">다음</button>
+            </div>
+        </div>
+
+        <!-- 페이지 5: 설문 B -->
+        <div class="page" id="page-survey-b">
+            <h1>일반 설문 (2/4)</h1>
+            <div class="progress-text">전체 진행률: 20%</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%"></div>
+            </div>
+            <p style="color: #666; margin-bottom: 20px; font-weight: bold;">
+                Ⅱ. 다음은 귀하의 <strong>리더십 특성</strong>을 알아보기 위한 문항입니다. 본인의 생각과 가장 가까운 곳에 표시해주십시오.
+            </p>
+
+            <div class="question" data-question="B1">
+                <div class="question-text">B1. 나는 조직에서 리더 역할을 맡는 것에 부담을 느끼거나 피하고 싶다고 생각할 때가 자주 있다. <span style="color: #f44336;">[역문항]</span></div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'B1', 1)">
+                        <input type="radio" name="B1" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B1', 2)">
+                        <input type="radio" name="B1" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B1', 3)">
+                        <input type="radio" name="B1" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B1', 4)">
+                        <input type="radio" name="B1" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B1', 5)">
+                        <input type="radio" name="B1" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="B2">
+                <div class="question-text">B2. 나는 동료들을 이끌고 조직의 목표 달성에 적극적으로 기여하고 싶다는 열망이 강하다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'B2', 1)">
+                        <input type="radio" name="B2" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B2', 2)">
+                        <input type="radio" name="B2" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B2', 3)">
+                        <input type="radio" name="B2" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B2', 4)">
+                        <input type="radio" name="B2" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B2', 5)">
+                        <input type="radio" name="B2" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="B3">
+                <div class="question-text">B3. 나는 어려운 상황에서도 팀을 이끌고 해결책을 찾는 데 주도적으로 참여하고 싶다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'B3', 1)">
+                        <input type="radio" name="B3" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B3', 2)">
+                        <input type="radio" name="B3" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B3', 3)">
+                        <input type="radio" name="B3" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B3', 4)">
+                        <input type="radio" name="B3" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'B3', 5)">
+                        <input type="radio" name="B3" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <p class="error-message" id="survey-b-error">모든 문항에 답변해주세요.</p>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button class="btn btn-primary" onclick="validateSurveyB()">다음</button>
+            </div>
+        </div>
+
+        <!-- 페이지 6: 설문 C -->
+        <div class="page" id="page-survey-c">
+            <h1>일반 설문 (3/4)</h1>
+            <div class="progress-text">전체 진행률: 30%</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 30%"></div>
+            </div>
+            <p style="color: #666; margin-bottom: 20px; font-weight: bold;">
+                Ⅲ. 다음은 현재 근무하는 기관의 <strong>보수제도</strong>에 관한 귀하의 의견을 파악하기 위한 문항입니다. 본인의 생각과 가장 가까운 곳에 표시해주십시오.
+            </p>
+
+            <div class="question" data-question="C1">
+                <div class="question-text">C1. 나는 내 직무성과를 고려할 때 공정한 보상을 받고 있다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'C1', 1)">
+                        <input type="radio" name="C1" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C1', 2)">
+                        <input type="radio" name="C1" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C1', 3)">
+                        <input type="radio" name="C1" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C1', 4)">
+                        <input type="radio" name="C1" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C1', 5)">
+                        <input type="radio" name="C1" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="C2">
+                <div class="question-text">C2. 나는 담당직무의 난이도를 감안할 때 공정한 보상을 받고 있다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'C2', 1)">
+                        <input type="radio" name="C2" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C2', 2)">
+                        <input type="radio" name="C2" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C2', 3)">
+                        <input type="radio" name="C2" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C2', 4)">
+                        <input type="radio" name="C2" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C2', 5)">
+                        <input type="radio" name="C2" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="C3">
+                <div class="question-text">C3. 나는 담당직무의 책임성 정도를 고려할 때 공정한 보상을 받고 있다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'C3', 1)">
+                        <input type="radio" name="C3" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C3', 2)">
+                        <input type="radio" name="C3" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C3', 3)">
+                        <input type="radio" name="C3" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C3', 4)">
+                        <input type="radio" name="C3" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'C3', 5)">
+                        <input type="radio" name="C3" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <p class="error-message" id="survey-c-error">모든 문항에 답변해주세요.</p>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button class="btn btn-primary" onclick="validateSurveyC()">다음</button>
+            </div>
+        </div>
+
+        <!-- 페이지 7: 설문 D -->
+        <div class="page" id="page-survey-d">
+            <h1>일반 설문 (4/4)</h1>
+            <div class="progress-text">전체 진행률: 40%</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+            </div>
+            <p style="color: #666; margin-bottom: 20px; font-weight: bold;">
+                Ⅳ. 다음은 현재 근무하는 기관의 <strong>인사제도</strong>에 관한 귀하의 의견을 파악하기 위한 문항입니다. 본인의 생각과 가장 가까운 곳에 표시해주십시오.
+            </p>
+
+            <div class="question" data-question="D1">
+                <div class="question-text">D1. 우리기관은 직원들의 지속적인 역량 강화 및 자기계발을 위한 체계적인 교육지원 시스템이 갖추어져 있다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'D1', 1)">
+                        <input type="radio" name="D1" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D1', 2)">
+                        <input type="radio" name="D1" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D1', 3)">
+                        <input type="radio" name="D1" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D1', 4)">
+                        <input type="radio" name="D1" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D1', 5)">
+                        <input type="radio" name="D1" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="D2">
+                <div class="question-text">D2. 우리기관의 승진 및 전환·배치제도는 체계적으로 운영되고 있다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'D2', 1)">
+                        <input type="radio" name="D2" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D2', 2)">
+                        <input type="radio" name="D2" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D2', 3)">
+                        <input type="radio" name="D2" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D2', 4)">
+                        <input type="radio" name="D2" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D2', 5)">
+                        <input type="radio" name="D2" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <div class="question" data-question="D3">
+                <div class="question-text">D3. 우리기관은 승진자에게 적절한 지원(교육, 인력, 보상 등)을 제공하고 있다.</div>
+                <div class="likert-scale">
+                    <label class="likert-option" onclick="selectLikert(this, 'D3', 1)">
+                        <input type="radio" name="D3" value="1">
+                        ① 전혀 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D3', 2)">
+                        <input type="radio" name="D3" value="2">
+                        ② 그렇지 않다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D3', 3)">
+                        <input type="radio" name="D3" value="3">
+                        ③ 보통이다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D3', 4)">
+                        <input type="radio" name="D3" value="4">
+                        ④ 그렇다
+                    </label>
+                    <label class="likert-option" onclick="selectLikert(this, 'D3', 5)">
+                        <input type="radio" name="D3" value="5">
+                        ⑤ 매우 그렇다
+                    </label>
+                </div>
+            </div>
+
+            <p class="error-message" id="survey-d-error">모든 문항에 답변해주세요.</p>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button class="btn btn-primary" onclick="validateSurveyD()">다음</button>
+            </div>
+        </div>
+
+        <!-- 페이지 8: 비네트 안내 -->
+        <div class="page" id="page-vignette-intro">
+            <h1>시나리오 기반 설문 안내</h1>
+            <div class="intro-text">
+                <p><strong>이제 가상의 승진 시나리오에 대한 설문을 시작합니다.</strong></p>
+                <p style="margin-top: 15px;">
+                    다음 화면부터는 <strong>총 10개의 가상 시나리오</strong>가 제시됩니다.
+                </p>
+                <p style="margin-top: 15px;">
+                    각 시나리오는 4직급에서 3직급(초급간부)로 승진할 때의 다양한 조건들을 담고 있습니다.
+                </p>
+                <p style="margin-top: 15px;">
+                    각 시나리오를 읽고, <strong>해당 조건에서 승진할 의향이 어느 정도인지</strong>를 
+                    <strong>0%부터 100%</strong> 사이의 슬라이더로 표시해주세요.
+                </p>
+                <p style="margin-top: 15px; color: #666;">
+                    • 0% = 전혀 승진하고 싶지 않음<br>
+                    • 50% = 보통<br>
+                    • 100% = 매우 승진하고 싶음
+                </p>
+            </div>
+            <div class="alert alert-info">
+                <strong>💡 참고:</strong> 각 시나리오는 독립적입니다. 이전 응답에 구애받지 말고 각 시나리오별로 솔직하게 답변해주세요.
+            </div>
+            <div class="btn-group-center">
+                <button class="btn btn-primary" onclick="nextPage()">다음</button>
+            </div>
+        </div>
+
+        <!-- 페이지 10: 현행 제도 평가 -->
+        <div class="page" id="page-current-system">
+            <h1>현행 제도 평가</h1>
+            <p style="color: #666; margin-bottom: 10px"> 먼저, 귀하 기관의 <strong>현행 승진 제도</strong>에 대해 평가해주세요.</p>
+
+            <div id="current-system-table-container"></div>
+
+            <div class="slider-container" style="margin-top: 30px;">
+                <label style="font-size: 18px; font-weight: bold; margin-bottom: 20px; display: block; text-align: center;">
+                    현행 제도에서 3직급으로 승진할 의향이 어느 정도이십니까?
+                </label>
+                <div class="slider-label">
+                    <span>0% (전혀 의향 없음)</span>
+                    <span>100% (매우 승진하고 싶음)</span>
+                </div>
+                <input type="range" id="current-system-slider" min="0" max="100" value="50" step="5"
+                       oninput="updateCurrentSystemSliderValue()">
+                <div class="slider-value" id="current-system-slider-value">50%</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">이전</button>
+                <button class="btn btn-primary" onclick="saveCurrentSystemAndStart()">시나리오 시작</button>
+            </div>
+        </div>
+
+        <!-- 비네트 시나리오 페이지들 (동적 생성) -->
+        <div id="vignette-pages"></div>
+
+        <!-- 페이지 마지막: 완료 -->
+        <div class="page" id="page-complete">
+            <h1>설문 완료</h1>
+            <div class="completion-icon">✓</div>
+            <div class="intro-text">
+                <p style="text-align: center; font-size: 18px;">
+                    <strong>설문에 참여해주셔서 진심으로 감사드립니다!</strong>
+                </p>
+                <p style="margin-top: 20px; text-align: center;">
+                    귀하의 소중한 응답은 연구에 큰 도움이 될 것입니다.
+                </p>
+            </div>
+            <div class="btn-group-center">
+                <button class="btn btn-success" onclick="submitToGoogleSheets()">응답 제출하기</button>
+            </div>
+            <div class="intro-text" style="margin-top: 20px; font-size: 14px;">
+                <p style="text-align: center; color: #666;">
+                    ※ 제출 버튼을 누르면 응답이 자동으로 저장됩니다.<br>
+                    백업용 파일도 함께 다운로드됩니다.
+                </p>
+            </div>
+            <div class="intro-text" style="margin-top: 30px; font-size: 14px;">
+                <p style="text-align: center; color: #666;">
+                    문의사항이 있으시면 연구진에게 연락주시기 바랍니다.<br>
+                    (email: eyang@kipf.re.kr)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let currentPage = 0;
+        let surveyData = {
+            consent: null,
+            demographics: {},
+            surveyA: {},
+            surveyB: {},
+            surveyC: {},
+            surveyD: {},
+            currentSystemIntention: null,
+            vignettes: []
+        };
+        let vignetteScenarios = [];
+        let vignetteConditions = {};
+
+        // 비네트 조건 정의
+        function getVignetteConditions(organization) {
+            const vignetteConditions = {
+                '한국남부발전': {
+                    baseSalary: ['3%', '5%', '7%'],
+                    jobPay: ['10%', '20%', '30%'],
+                    performancePay: ['150~250%', '133.5~267%', '100~300%'],
+                    rotation: ['현행 유지', '선호권역 근무제한이 13년으로 완화'],
+                    authority: ['현행 유지', '확대']
+                },
+                '한국전력공사': {
+                    baseSalary: ['3%', '5%', '7%'],
+                    jobPay: ['10%', '20%', '30%'],
+                    performancePay: ['150~250%', '133~267%', '100~300%'],
+                    rotation: ['현행 유지', '선호권역 근무제한이 15년으로 완화'],
+                    authority: ['현행 유지', '확대']
+                },
+                '한국수력원자력': {
+                    baseSalary: ['3%', '5%', '7%'],
+                    jobPay: ['10%', '20%', '30%'],
+                    performancePay: ['150~250%', '133~266%', '100~300%'],
+                    rotation: ['현행 유지', '선호권역 근무제한이 10~12년으로 완화'],
+                    authority: ['현행 유지', '확대']
+                }
+            };
+            return vignetteConditions[organization] || vignetteConditions['한국남부발전'];
+        };
+
+        // 기관별 현행 제도 정보를 반환하는 함수
+        function getOrganizationTable(organization) {
+           const tables = {
+                '한국남부발전': '<table style="width: 100%; border-collapse: collapse; margin: 10px 0;">' +
+                    '<thead><tr style="background: #6c757d; color: white;">' +
+                    '<th style="padding: 6px; border: 1px solid #ddd; text-align: center; width: 20%;">항목</th>' +
+                    '<th style="padding: 6px; border: 1px solid #ddd; text-align: center;">현행제도</th>' +
+                    '</tr></thead><tbody>' +
+                    '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">기본급 조정</td>' +
+                    '<td style="padding: 6px; border: 1px solid #ddd; font-size: 14px;">' +
+                    '<table style="width: 100%; border-collapse: collapse;">' +
+                    '<tr style="background: #f8f9fa;"><td style="padding: 3px; border: 1px solid #ddd; text-align: center; font-weight: bold; width: 15%;">구분</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; text-align: center; font-weight: bold; width: 15%;">호봉</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; text-align: center; font-weight: bold;">기준급 전환 산식</td></tr>' +
+                    '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">4(가)직급→<br>3직급</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; text-align: center;">전체</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;"> ((본인기본급 + (4(가)4등급 직능급+20만원)) × 12) × 0.93 –(12,000천원)</td></tr>' +
+                    '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;" rowspan="4">4(나)직급→<br>3직급</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; text-align: center;">26호봉 이상</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;"> ((본인기본급 + (4(나)6등급 직능급+20만원)) × 12)× 0.98 –(12,000천원)</td></tr>' +
+                    '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">21~25호봉</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;"> ((본인기본급 + (4(나)6등급 직능급+20만원)) × 12)× 0.99 –(12,000천원)</td></tr>' +
+                    '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">15~20호봉</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;"> ((본인기본급 + (4(나)6등급 직능급+20만원)) × 12) × 1.01 –(12,000천원)</td></tr>' +
+                    '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">15호봉 이하</td>' +
+                    '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;"> ((본인기본급 + (4(나)6등급 직능급+20만원)) × 12) × 1.02 –(12,000천원)</td></tr>' +
+                    '</table>' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">직무급 차등</td>' +
+                    '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                    '- 4직급 대비 3직급의 평균 직무급 수준: <strong>217.31%</strong>' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">성과급 변동</td>' +
+                    '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                    '- 4직급의 성과급 범위 : <strong>200% (고정)</strong><br>' +
+                    '- 3직급의 성과급 범위 : <strong>133.5 ~ 267%</strong>' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">순환보직 제도</td>' +
+                    '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                    '- 선호 권역별: 신인천, 부산, 신세종<br>' +
+                    '- 선호 권역 근무 제한기간: 초급간부 <strong>8년</strong>, 일반직원 <strong>13년</strong> ' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">평가권한 범위</td>' +
+                    '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                    '- 평가권한: O<br>' +
+                    '- 평가결과 영향: 승진 - 최근 2년간 근무성적 반영<br>'+
+                    '<span style="margin-left: 122px;">급여 - 간접적 영향 (직능등급 승급으로 인한 직능급 상승)</span>' +
+                    '</td></tr>' +
+                    '</tbody></table>',
+                
+                '한국전력공사': '<table style="width: 100%; border-collapse: collapse; margin: 10px 0;">' +
+                    '<thead><tr style="background: #6c757d; color: white;">' +
+                    '<th style="padding: 12px; border: 1px solid #ddd; text-align: center; width: 20%;">항목</th>' +
+                    '<th style="padding: 12px; border: 1px solid #ddd; text-align: center;">현행제도</th>' +
+                    '</tr></thead><tbody>' +
+                    '<tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">기본급 조정</td>' +
+                    '<td style="padding: 10px; border: 1px solid #ddd;">' +
+                    '- 4(가)직급 → 3직급: 승진 전 기준급액 기준 4.9% 상향조정<br>' +
+                    '- 4(나)직급 → 3직급: 승진 전 기본급액 기준 9.9% 상향조정<br>' +
+                    '<span style="margin-left: 160px; font-size: 13px; color: #666;">(※ 조정액이 3직급 하한액 이하일 경우 하한액 적용)</span>' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">직무급 차등</td>' +
+                    '<td style="padding: 10px; border: 1px solid #ddd;">' +
+                    '- 4직급 대비 3직급의 평균 직무급 수준: <strong>117.10%</strong>' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">성과급 변동</td>' +
+                    '<td style="padding: 10px; border: 1px solid #ddd;">' +
+                    '- 4직급의 성과급 범위: <strong>180~220%</strong><br>' +
+                    '- 3직급의 성과급 범위: <strong>133~267%</strong>' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">순환보직 제도</td>' +
+                    '<td style="padding: 10px; border: 1px solid #ddd;">' +
+                    '- 선호 권역주: 수도권사업소(서울・남서울・경기・경기 북부・인천)<br>' +
+                    '- 선호 권역 근무 제한기간: 초급간부 <strong>6년</strong>, 일반직원 <strong>제한없음</strong>' +
+                    '</td></tr>' +
+                    '<tr><td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">평가권한 범위</td>' +
+                    '<td style="padding: 10px; border: 1px solid #ddd;">' +
+                    '- 평가권한: O<br>' +
+                    '- 평가결과 영향: 승진 - 최근 3년간 근무성적 반영<br>' +
+                    '<span style="margin-left: 122px;">급여 - 영향없음</span>' +
+                    '</td></tr>' +
+                    '</tbody></table>',
+                
+                 '한국수력원자력': '<table style="width: 100%; border-collapse: collapse; margin: 10px 0;">' +
+                '<thead><tr style="background: #6c757d; color: white;">' +
+                '<th style="padding: 6px; border: 1px solid #ddd; text-align: center; width: 20%;">항목</th>' +
+                '<th style="padding: 6px; border: 1px solid #ddd; text-align: center;">현행제도</th>' +
+                '</tr></thead><tbody>' +
+                '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">기본급 조정</td>' +
+                '<td style="padding: 6px; border: 1px solid #ddd; font-size: 14px;">' +
+                '<table style="width: 100%; border-collapse: collapse;">' +
+                '<tr style="background: #f8f9fa;"><td style="padding: 3px; border: 1px solid #ddd; text-align: center; font-weight: bold; width: 20%;">구분</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; text-align: center; font-weight: bold; width: 15%;">직능등급</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; text-align: center; font-weight: bold;">기준급 전환 산식</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;" rowspan="5">4(갑)→<br>3직급</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; text-align: center;">5, 6</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.22)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">4</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.25)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">3</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.28)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">2</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.32)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">1</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.36)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;" rowspan="4">4(을)→<br>3직급</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; text-align: center;">6</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.40)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">5</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.42)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">4</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.47)× 12) -22,800천원</td></tr>' +
+                '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">3</td>' +
+                '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;">((본인기준급 * 1.51)× 12) -22,800천원</td></tr>' +
+                '</table>' +
+                '</td></tr>' +
+                '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">직무급 차등</td>' +
+                '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                '- 4직급 대비 3직급의 평균 직무급 수준: <strong>184.27%</strong>' +
+                '</td></tr>' +
+                '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">성과급 변동</td>' +
+                '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                '- 4직급의 성과급 범위 : <strong>200% (고정)</strong><br>' +
+                '- 3직급의 성과급 범위 : <strong>133.3 ~ 266%</strong>' +
+                '</td></tr>' +
+                '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">순환보직 제도</td>' +
+                '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                '- 선호 권역주: 고리/새울본부, 인재개발원<br>' +
+                '- 선호 권역 근무 제한기간: 초급간부 <strong>7년</strong>, 일반직원 <strong>8~12년</strong>' +
+                '</td></tr>' +
+                '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">평가권한 범위</td>' +
+                '<td style="padding: 6px; border: 1px solid #ddd;">' +
+                '- 평가권한: O<br>' +
+                '- 평가결과 영향: 승진 - 최근 2년간 근무성적 반영<br>'+
+                    '<span style="margin-left: 122px;">급여 - 간접적 영향 (직능등급 승급으로 인한 직능급 상승)</span>' +
+                '</td></tr>' +
+                '</tbody></table>'
+        };
+            return tables[organization] || '';
+        }
+
+        // 페이지 이동
+        function nextPage() {
+            const pages = document.querySelectorAll('.page');
+            pages[currentPage].classList.remove('active');
+            currentPage++;
+            pages[currentPage].classList.add('active');
+            window.scrollTo(0, 0);
+            
+            // 현행 제도 평가 페이지에 도달했을 때 테이블 표시
+            if (pages[currentPage].id === 'page-current-system') {
+                displayCurrentSystemTable();
+            }
+        }
+
+        function prevPage() {
+            const pages = document.querySelectorAll('.page');
+            pages[currentPage].classList.remove('active');
+            currentPage--;
+            pages[currentPage].classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // 동의 선택
+        function selectConsent(agree) {
+            surveyData.consent = agree;
+            document.querySelectorAll('input[name="consent"]').forEach(radio => {
+                radio.checked = false;
+            });
+            event.target.closest('.radio-option').querySelector('input').checked = true;
+            
+            document.querySelectorAll('.radio-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.target.closest('.radio-option').classList.add('selected');
+        }
+
+        function checkConsent() {
+            if (surveyData.consent === null) {
+                document.getElementById('consent-error').style.display = 'block';
+                return;
+            }
+            if (surveyData.consent === false) {
+                alert('설문 참여에 동의하지 않으셨습니다. 감사합니다.');
+                return;
+            }
+            document.getElementById('consent-error').style.display = 'none';
+            nextPage();
+        }
+
+        // 직종 기타 입력
+        function toggleJobTypeOther() {
+            const select = document.getElementById('job-type');
+            const otherInput = document.getElementById('job-type-other');
+            if (select.value === '기타') {
+                otherInput.style.display = 'block';
+            } else {
+                otherInput.style.display = 'none';
+            }
+        }
+
+        // 기본정보 유효성 검사
+        function validateDemographics() {
+            const organization = document.getElementById('organization').value;
+            const grade = document.getElementById('grade').value;
+            const jobType = document.getElementById('job-type').value;
+            const jobTypeOther = document.getElementById('job-type-other').value;
+            const years = document.getElementById('years').value;
+            const months = document.getElementById('months').value;
+            const birthYear = document.getElementById('birth-year').value;
+            const gender = document.getElementById('gender').value;
+            const education = document.getElementById('education').value;
+            const maritalStatus = document.getElementById('marital-status').value;
+            const children = document.getElementById('children').value;
+
+            if (!organization || !grade || !jobType || !years || !months || 
+                !birthYear || !gender || !education || !maritalStatus || !children) {
+                document.getElementById('demographics-error').style.display = 'block';
+                return;
+            }
+
+            if (jobType === '기타' && !jobTypeOther) {
+                document.getElementById('demographics-error').textContent = '직종을 입력해주세요.';
+                document.getElementById('demographics-error').style.display = 'block';
+                return;
+            }
+
+            surveyData.demographics = {
+                organization,
+                grade,
+                jobType: jobType === '기타' ? jobTypeOther : jobType,
+                tenure: `${years}년 ${months}개월`,
+                birthYear,
+                gender,
+                education,
+                maritalStatus,
+                children
+            };
+
+            document.getElementById('demographics-error').style.display = 'none';
+            nextPage();
+        }
+
+        // Likert 선택
+        function selectLikert(element, questionId, value) {
+            const question = element.closest('.question');
+            question.querySelectorAll('.likert-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            element.querySelector('input').checked = true;
+        }
+
+        // 설문 A 유효성 검사
+        function validateSurveyA() {
+            const questions = ['A1', 'A2', 'A3', 'A4'];
+            for (let q of questions) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (!selected) {
+                    document.getElementById('survey-a-error').style.display = 'block';
+                    return;
+                }
+                surveyData.surveyA[q] = selected.value;
+            }
+            document.getElementById('survey-a-error').style.display = 'none';
+            nextPage();
+        }
+
+        // 설문 B 유효성 검사
+        function validateSurveyB() {
+            const questions = ['B1', 'B2', 'B3'];
+            for (let q of questions) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (!selected) {
+                    document.getElementById('survey-b-error').style.display = 'block';
+                    return;
+                }
+                surveyData.surveyB[q] = selected.value;
+            }
+            document.getElementById('survey-b-error').style.display = 'none';
+            nextPage();
+        }
+
+        // 설문 C 유효성 검사
+        function validateSurveyC() {
+            const questions = ['C1', 'C2', 'C3'];
+            for (let q of questions) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (!selected) {
+                    document.getElementById('survey-c-error').style.display = 'block';
+                    return;
+                }
+                surveyData.surveyC[q] = selected.value;
+            }
+            document.getElementById('survey-c-error').style.display = 'none';
+            nextPage();
+        }
+
+        // 설문 D 유효성 검사
+        function validateSurveyD() {
+            const questions = ['D1', 'D2', 'D3'];
+            for (let q of questions) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (!selected) {
+                    document.getElementById('survey-d-error').style.display = 'block';
+                    return;
+                }
+                surveyData.surveyD[q] = selected.value;
+            }
+            document.getElementById('survey-d-error').style.display = 'none';
+            nextPage();
+        }
+
+        // 비네트 시나리오 생성
+        function generateVignettes() {
+            vignetteScenarios = [];
+            for (let i = 0; i < 10; i++) {
+                const scenario = {
+                    id: i + 1,
+                    baseSalary: vignetteConditions.baseSalary[Math.floor(Math.random() * 3)],
+                    jobPay: vignetteConditions.jobPay[Math.floor(Math.random() * 3)],
+                    performancePay: vignetteConditions.performancePay[Math.floor(Math.random() * 3)],
+                    rotation: vignetteConditions.rotation[Math.floor(Math.random() * 2)],
+                    authority: vignetteConditions.authority[Math.floor(Math.random() * 2)]
+                };
+                vignetteScenarios.push(scenario);
+            }
+        }
+
+        // 비네트 페이지 생성
+        function createVignettePages() {
+            const container = document.getElementById('vignette-pages');
+            const userOrganization = surveyData.demographics.organization;
+            const orgTable = getOrganizationTable(userOrganization);
+            
+            // 기관별 제목 설정
+            let tableTitle = '승진 관련 현행 제도';
+            
+            
+            vignetteScenarios.forEach((scenario, index) => {
+                const progress = 50 + (index + 1) * 5;   
+
+                // 현행 제도 정보 HTML (테이블이 있을 경우)
+                const currentSystemHTML = orgTable ? `
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 25px; border: 2px solid #6c757d;">
+                        <h3 style="color: #6c757d; text-align: center; margin-bottom: 15px; font-size: 18px;">
+                            📊 귀하의 기관(${userOrganization}) ${tableTitle}
+                        </h3>
+                        <div style="overflow-x: auto;">
+                            ${orgTable}
+                        </div>
+                        <p style="text-align: center; margin-top: 15px; font-size: 14px; color: #666;">
+                            ※ 위 기준 대비 아래 시나리오의 조건을 비교하여 답변해주세요.
+                        </p>
+                    </div>
+                ` : `
+                    <div class="alert alert-info" style="margin-bottom: 25px;">
+                        <strong>📊 참고:</strong> 귀하의 기관(${userOrganization})의 현행 제도를 기준으로 아래 시나리오를 평가해주세요.
+                    </div>
+                `;
+                
+                const pageHTML = `
+                    <div class="page" id="page-vignette-${index}">
+                        <h1>시나리오 ${scenario.id} / 10</h1>
+                        <div class="progress-text">전체 진행률: ${progress}%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+
+                        ${currentSystemHTML}
+
+                        <div class="scenario-box">
+                            <div class="scenario-title">🎯 다음 승진 조건을 가정해주세요</div>
+                            <div class="scenario-condition">
+                                <strong>1. 기본급 상승:</strong> 승진 시 기본급이 현행 대비 <strong style="color: black;">${scenario.baseSalary} 증가</strong>합니다.
+                            </div>
+                            <div class="scenario-condition">
+                                <strong>2. 직무급 차등:</strong> 승진 시 일반직원 대비 <strong style="color: black;">현행 증가분+${scenario.jobPay} 높은 직무에 배치</strong>됩니다.
+                            </div>
+                            <div class="scenario-condition">
+                                <strong>3. 성과급 효과:</strong> 개인 성과에 따라 기본월액의 <strong style="color: black;">${scenario.performancePay} 범위</strong>로 보상받을 수 있습니다.
+                            </div>
+                            <div class="scenario-condition">
+                                <strong>4. 순환보직 의무:</strong> 순환보직 의무가 <strong style="color: black;">${scenario.rotation}</strong>됩니다.
+                            </div>
+                            <div class="scenario-condition">
+                                <strong>5. 관리권한:</strong> 팀원에 대한 관리권한이 <strong style="color: black;">${scenario.authority}</strong>됩니다.
+                            </div>
+
+                             ${scenario.authority === '확대' ? `
+                            <div style="background: #fff9e6; padding: 10px 20px; border-radius: 10px; margin: 10px 0; border-left: 4px solid #ffa726;">
+                            <div style="font-weight: bold; color: #f57c00; margin-bottom: 8px; font-size: 16px;">
+                                ℹ️ 관리권한 확대 세부 사항:
+                            </div>
+                            <div style="font-size: 14px; line-height: 1.2; color: #333;">
+                                <p style="margin: 6px 0;">
+                                    <strong>• 인사(배치, 승급 등):</strong> 최근 2-3년간 근무성적 평가 결과를 반영하여 직무, 팀, 사업소 배치에 반영 *초급간부의 의견 반영
+                                </p>
+                                <p style="margin: 6px 0;">
+                                    <strong>• 급여:</strong> 최근 2년간 근무성적 평가 결과가 중간 등급 이하인 경우 기본급 인상 제한
+                                </p>
+                                <p style="margin: 6px 0;">
+                                    <strong>• 승진:</strong> 최근 2년 또는 3년간 근무성적 평가 결과가 중간 등급 이하인 경우, 승진(5→4급, 4→3급) 제한
+                                </p>
+                            </div>
+                        </div>
+                        ` : ''}
+                       </div>
+
+                        <div class="slider-container">
+                            <label style="font-size: 18px; font-weight: bold; margin-bottom: 20px; display: block;">
+                                위 조건에서 3직급으로 승진할 의향이 어느 정도이십니까?
+                            </label>
+                            <div class="slider-label">
+                                <span>0% (전혀 의향 없음)</span>
+                                <span>100% (매우 승진하고 싶음)</span>
+                            </div>
+                            <input type="range" id="vignette-slider-${index}" min="0" max="100" value="50" step="5"
+                                   oninput="updateSliderValue(${index})">
+                            <div class="slider-value" id="slider-value-${index}">50%</div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" onclick="prevVignette(${index})">이전</button>
+                            <button class="btn btn-primary" onclick="nextVignette(${index})">
+                                ${index === 9 ? '완료' : '다음'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += pageHTML;
+            });
+        }
+
+        // 슬라이더 값 업데이트
+        function updateSliderValue(index) {
+            const slider = document.getElementById(`vignette-slider-${index}`);
+            const valueDisplay = document.getElementById(`slider-value-${index}`);
+            valueDisplay.textContent = slider.value + '%';
+        }
+
+        // 비네트 네비게이션
+        function prevVignette(index) {
+            prevPage();
+        }
+
+        function nextVignette(index) {
+            const slider = document.getElementById(`vignette-slider-${index}`);
+            surveyData.vignettes.push({
+                scenarioId: index + 1,
+                conditions: vignetteScenarios[index],
+                intention: parseInt(slider.value)
+            });
+
+            if (index === 9) {
+                // 마지막 시나리오
+                nextPage();
+            } else {
+                nextPage();
+            }
+        }
+
+        // 현행 제도 테이블 표시
+        function displayCurrentSystemTable() {
+            const userOrganization = surveyData.demographics.organization;
+            const orgTable = getOrganizationTable(userOrganization);
+            const container = document.getElementById('current-system-table-container');
+            
+            if (orgTable) {
+                container.innerHTML = `
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #6c757d;">
+                        <h3 style="color: #6c757d; text-align: center; margin-bottom: 15px; font-size: 18px;">
+                            📊 귀하의 기관(${userOrganization}) 승진 관련 현행 제도
+                        </h3>
+                        <div style="overflow-x: auto;">
+                            ${orgTable}
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="alert alert-info">
+                        <strong>📊 참고:</strong> 귀하의 기관(${userOrganization})의 현행 제도를 기준으로 평가해주세요.
+                    </div>
+                `;
+            }
+        }
+
+        // 현행 제도 슬라이더 값 업데이트
+        function updateCurrentSystemSliderValue() {
+            const slider = document.getElementById('current-system-slider');
+            const valueDisplay = document.getElementById('current-system-slider-value');
+            valueDisplay.textContent = slider.value + '%';
+        }
+
+        // 현행 제도 평가 저장 및 비네트 시작
+        function saveCurrentSystemAndStart() {
+            const slider = document.getElementById('current-system-slider');
+            surveyData.currentSystemIntention = parseInt(slider.value);
+            startVignettes();
+        }
+
+        // 비네트 시작
+        function startVignettes() {
+            const userOrganization = surveyData.demographics.organization;
+            vignetteConditions = getVignetteConditions(userOrganization); 
+            generateVignettes();
+            createVignettePages();
+            nextPage();
+        }
+
+        // Google Sheets로 데이터 전송
+        async function submitToGoogleSheets() {
+            // 여기에 Apps Script 웹 앱 URL을 입력하세요
+            const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+            
+            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+                alert('Google Sheets 연동이 설정되지 않았습니다.\n\n관리자에게 문의하거나 아래 버튼으로 JSON 파일을 다운로드하세요.');
+                downloadData();
+                return;
+            }
+            
+            try {
+                surveyData.timestamp = new Date().toISOString();
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(surveyData)
+                });
+                
+                // no-cors 모드에서는 응답을 읽을 수 없으므로 성공으로 간주
+                alert('설문 응답이 성공적으로 제출되었습니다!\n감사합니다.');
+                
+                // 백업용 다운로드도 제공
+                downloadData();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('전송 중 오류가 발생했습니다.\n데이터를 다운로드하여 관리자에게 보내주세요.(email: eyang@kipf.re.kr)');
+                downloadData();
+            }
+        }
+        
+        // 데이터 다운로드 (백업용)
+        function downloadData() {
+            surveyData.timestamp = new Date().toISOString();
+            const dataStr = JSON.stringify(surveyData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `survey-response-${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
