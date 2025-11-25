@@ -493,14 +493,38 @@
                 <div class="input-group">
                     <input type="number" id="years" placeholder="연수" min="0" max="50" required>
                     <span>년</span>
+                    <script>
+                    document.getElementById('years').addEventListener('input', function() {
+                        let value = parseInt(this.value);
+                        if (value > 50 || value < 0) {
+                            this.value = '';
+                        }
+                    });
+                    </script>
                     <input type="number" id="months" placeholder="개월" min="0" max="11" required>
                     <span>개월</span>
+                    <script>
+                   document.getElementById('months').addEventListener('input', function() {
+                        let value = parseInt(this.value);
+                        if (value > 11 || value < 0) {
+                            this.value = '';
+                        }
+                    });
+                    </script>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>5. 출생연도 (예: 1985)</label>
-                <input type="number" id="birth-year" placeholder="YYYY" min="1940" max="2010" required>
+                <input type="number" id="birth-year" placeholder="YYYY" min="1950" max="2005" required>
+                 <script>
+                    document.getElementById('birth-year').addEventListener('blur', function() {
+                        let value = parseInt(this.value);
+                        if (value > 2005 || value < 1950) {
+                            this.value = '';
+                        }
+                    });
+                    </script>
             </div>
 
             <div class="form-group">
@@ -530,6 +554,7 @@
                     <option value="">선택하세요</option>
                     <option value="미혼">미혼</option>
                     <option value="기혼">기혼</option>
+                    <option value="기타">기타</option>
                 </select>
             </div>
 
@@ -687,7 +712,7 @@
             </p>
 
             <div class="question" data-question="B1">
-                <div class="question-text">B1. 나는 조직에서 리더 역할을 맡는 것에 부담을 느끼거나 피하고 싶다고 생각할 때가 자주 있다. <span style="color: #f44336;">[역문항]</span></div>
+                <div class="question-text">B1. 나는 조직에서 리더 역할을 맡는 것에 부담을 느끼거나 피하고 싶다고 생각할 때가 자주 있다.</div>
                 <div class="likert-scale">
                     <label class="likert-option" onclick="selectLikert(this, 'B1', 1)">
                         <input type="radio" name="B1" value="1">
@@ -1037,12 +1062,11 @@
                 </p>
             </div>
             <div class="btn-group-center">
-                <button class="btn btn-success" onclick="submitToGoogleSheets()">응답 제출하기</button>
+                <button class="btn btn-success" onclick="submitToSave()">응답 제출하기</button>
             </div>
             <div class="intro-text" style="margin-top: 20px; font-size: 14px;">
                 <p style="text-align: center; color: #666;">
-                    ※ 제출 버튼을 누르면 응답이 자동으로 저장됩니다.<br>
-                    백업용 파일도 함께 다운로드됩니다.
+                    ※ 제출 버튼을 누르면 응답이 자동으로 저장됩니다.
                 </p>
             </div>
             <div class="intro-text" style="margin-top: 30px; font-size: 14px;">
@@ -1074,25 +1098,25 @@
         function getVignetteConditions(organization) {
             const vignetteConditions = {
                 '한국남부발전': {
-                    baseSalary: ['3%', '5%', '7%'],
-                    jobPay: ['10%', '20%', '30%'],
-                    performancePay: ['150~250%', '133.5~267%', '100~300%'],
-                    rotation: ['현행 유지', '선호권역 근무제한이 13년으로 완화'],
-                    authority: ['현행 유지', '확대']
+                    baseSalary: ['0%', '3%', '5%'],
+                    jobPay: ['0%', '20%', '40%'],
+                    performancePay: ['현행', '80~320%'],
+                    rotation: ['현행유지', '선호권역 근무제한이 13년으로 완화'],
+                    authority: ['현행유지', '확대']
                 },
                 '한국전력공사': {
-                    baseSalary: ['3%', '5%', '7%'],
-                    jobPay: ['10%', '20%', '30%'],
-                    performancePay: ['150~250%', '133~267%', '100~300%'],
-                    rotation: ['현행 유지', '선호권역 근무제한이 15년으로 완화'],
-                    authority: ['현행 유지', '확대']
+                    baseSalary: ['0%', '3%', '5%'],
+                    jobPay: ['0%', '20%', '40%'],
+                    performancePay: ['현행', '80~320%'],
+                    rotation: ['현행유지', '선호권역 근무제한이 15년으로 완화'],
+                    authority: ['현행유지', '확대']
                 },
                 '한국수력원자력': {
-                    baseSalary: ['3%', '5%', '7%'],
-                    jobPay: ['10%', '20%', '30%'],
-                    performancePay: ['150~250%', '133~266%', '100~300%'],
-                    rotation: ['현행 유지', '선호권역 근무제한이 10~12년으로 완화'],
-                    authority: ['현행 유지', '확대']
+                    baseSalary: ['0%', '3%', '5%'],
+                    jobPay: ['0%', '20%', '40%'],
+                    performancePay: ['현행', '80~320%'],
+                    rotation: ['현행유지', '선호권역 근무제한이 10~12년으로 완화'],
+                    authority: ['현행유지', '확대']
                 }
             };
             return vignetteConditions[organization] || vignetteConditions['한국남부발전'];
@@ -1125,6 +1149,7 @@
                     '<tr><td style="padding: 3px; border: 1px solid #ddd; text-align: center;">15호봉 이하</td>' +
                     '<td style="padding: 3px; border: 1px solid #ddd; font-size: 13px;"> ((본인기본급 + (4(나)6등급 직능급+20만원)) × 12) × 1.02 –(12,000천원)</td></tr>' +
                     '</table>' +
+                    '<span style="font-size: 12px;"> * (4(가)4등급 직능급 = 1,448,000원, 4(나)6등급 직능급 = 1,162,000원 (2025년 11월 현재)</span>' +
                     '</td></tr>' +
                     '<tr><td style="padding: 6px; border: 1px solid #ddd; text-align: center; font-weight: bold;">직무급 차등</td>' +
                     '<td style="padding: 6px; border: 1px solid #ddd;">' +
@@ -1419,11 +1444,22 @@
                     id: i + 1,
                     baseSalary: vignetteConditions.baseSalary[Math.floor(Math.random() * 3)],
                     jobPay: vignetteConditions.jobPay[Math.floor(Math.random() * 3)],
-                    performancePay: vignetteConditions.performancePay[Math.floor(Math.random() * 3)],
+                    performancePay: vignetteConditions.performancePay[Math.floor(Math.random() * 2)],
                     rotation: vignetteConditions.rotation[Math.floor(Math.random() * 2)],
                     authority: vignetteConditions.authority[Math.floor(Math.random() * 2)]
                 };
-                vignetteScenarios.push(scenario);
+
+                const isAllDefault = 
+                    scenario.baseSalary === '0%' &&  // 0%
+                    scenario.jobPay === '0%' &&      // 0%
+                    scenario.performancePay === '현행' &&  // 현행유지
+                    scenario.rotation === '현행유지' &&      // 현행유지
+                    scenario.authority === '현행유지';      // 현행유지
+                
+                if (!isAllDefault) {
+                    vignetteScenarios.push(scenario);
+                }
+                
             }
         }
 
@@ -1475,10 +1511,10 @@
                                 <strong>1. 기본급 상승:</strong> 승진 시 기본급이 현행 대비 <strong style="color: black;">${scenario.baseSalary} 증가</strong>합니다.
                             </div>
                             <div class="scenario-condition">
-                                <strong>2. 직무급 차등:</strong> 승진 시 일반직원 대비 <strong style="color: black;">현행 증가분+${scenario.jobPay} 높은 직무에 배치</strong>됩니다.
+                                <strong>2. 직무급 상승:</strong> 승진 시 일반직원 대비 <strong style="color: black;">현행 증가분+${scenario.jobPay} 높은 직무에 배치</strong>됩니다.
                             </div>
                             <div class="scenario-condition">
-                                <strong>3. 성과급 효과:</strong> 개인 성과에 따라 기본월액의 <strong style="color: black;">${scenario.performancePay} 범위</strong>로 보상받을 수 있습니다.
+                                <strong>3. 성과급 차등:</strong> 개인 성과에 따라 기본월액의 <strong style="color: black;">${scenario.performancePay} 범위</strong>로 지급받을 수 있습니다.
                             </div>
                             <div class="scenario-condition">
                                 <strong>4. 순환보직 의무:</strong> 순환보직 의무가 <strong style="color: black;">${scenario.rotation}</strong>됩니다.
@@ -1490,14 +1526,14 @@
                              ${scenario.authority === '확대' ? `
                             <div style="background: #fff9e6; padding: 10px 20px; border-radius: 10px; margin: 10px 0; border-left: 4px solid #ffa726;">
                             <div style="font-weight: bold; color: #f57c00; margin-bottom: 8px; font-size: 16px;">
-                                ℹ️ 관리권한 확대 세부 사항:
+                                ℹ️ 관리권한(초급간부의 일반직원 평가결과에 대한 영향) 확대 범위:
                             </div>
                             <div style="font-size: 14px; line-height: 1.2; color: #333;">
                                 <p style="margin: 6px 0;">
-                                    <strong>• 인사(배치, 승급 등):</strong> 최근 2-3년간 근무성적 평가 결과를 반영하여 직무, 팀, 사업소 배치에 반영 *초급간부의 의견 반영
+                                    <strong>• 인사(배치, 승급 등):</strong> 최근 2-3년간 근무성적 평가 결과를 직무, 팀, 사업소 배치에 반영 <span style="font-size: 11px; color: gray;">*초급간부의 의견 반영</span>
                                 </p>
                                 <p style="margin: 6px 0;">
-                                    <strong>• 급여:</strong> 최근 2년간 근무성적 평가 결과가 중간 등급 이하인 경우 기본급 인상 제한
+                                    <strong>• 급여:</strong> 최근 2년간 근무성적 평가 결과가 중간 등급 이하인 경우, 기본급 인상 제한
                                 </p>
                                 <p style="margin: 6px 0;">
                                     <strong>• 승진:</strong> 최근 2년 또는 3년간 근무성적 평가 결과가 중간 등급 이하인 경우, 승진(5→4급, 4→3급) 제한
@@ -1609,54 +1645,197 @@
             nextPage();
         }
 
-        // Google Sheets로 데이터 전송
-        async function submitToGoogleSheets() {
-            // 여기에 Apps Script 웹 앱 URL을 입력하세요
-            const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
-            
-            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-                alert('Google Sheets 연동이 설정되지 않았습니다.\n\n관리자에게 문의하거나 아래 버튼으로 JSON 파일을 다운로드하세요.');
-                downloadData();
-                return;
-            }
-            
+        
+        // ==================== 데이터 저장 기능 ====================
+        
+        // Supabase 설정 (여기에 본인의 Supabase URL과 API 키를 입력하세요)
+        const SUPABASE_URL = 'https://vtxnugfufkpqhhsefzsy.supabase.co';  // 예: 'https://xxxxx.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0eG51Z2Z1ZmtwcWhoc2VmenN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4ODQ5OTEsImV4cCI6MjA3OTQ2MDk5MX0.qE8GdTsa2KPLeLawJxKiJvZNvvT-s8248H79WVyKTmQ';
+        
+        // Google Apps Script Web App URL (여기에 배포한 Google Apps Script URL을 입력하세요)
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRdCl9z9WKsvh124gWC9f6N19q-dQNPxZgH5k3AZctBM7Zh_OBRRMzbE_0quHOBMii/exec';
+
+        // 제출 버튼 함수
+        async function submitToSave() {
             try {
-                surveyData.timestamp = new Date().toISOString();
+                const submitBtn = event.target;
+                submitBtn.disabled = true;
+                submitBtn.textContent = '제출 중...';
+
+                // 제출 데이터 준비
+                const submissionData = prepareSubmissionData();
                 
+                console.log('제출 데이터:', submissionData);
+
+                // Supabase와 Google Sheets에 동시 저장
+                const [supabaseResult, googleSheetResult] = await Promise.all([
+                    saveToSupabase(submissionData),
+                    saveToGoogleSheet(submissionData)
+                ]);
+
+                if (supabaseResult.success || googleSheetResult.success) {
+                    alert('✅ 응답이 성공적으로 제출되었습니다!\n\n감사합니다.');
+                    submitBtn.textContent = '제출 완료';
+                    submitBtn.style.background = '#28a745';
+                } else {
+                    throw new Error('저장 실패');
+                }
+
+            } catch (error) {
+                console.error('제출 오류:', error);
+                // 로컬 백업 파일 다운로드
+                downloadBackup(submissionData);
+                alert('⚠️ 제출 중 오류가 발생했습니다.\n\n백업 파일이 다운로드되었습니다.\n연구진에게 파일을 보내주시면 감사하겠습니다. (email: eyang@kipf.re.kr).');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '응답 제출하기';
+            }
+        }
+
+        // 제출 데이터 준비
+        function prepareSubmissionData() {
+            return {
+                timestamp: new Date().toISOString(),
+                consent: surveyData.consent,
+                demographics: surveyData.demographics,
+                surveyA: surveyData.surveyA,
+                surveyB: surveyData.surveyB,
+                surveyC: surveyData.surveyC,
+                surveyD: surveyData.surveyD,
+                currentSystemIntention: surveyData.currentSystemIntention,
+                vignettes: surveyData.vignettes
+            };
+        }
+
+        // Supabase에 저장
+        async function saveToSupabase(data) {
+            try {
+                // Supabase URL이 설정되지 않았으면 건너뛰기
+                if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+                    console.log('Supabase가 설정되지 않았습니다.');
+                    return { success: false, message: 'Not configured' };
+                }
+
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/survey_responses`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Supabase 오류: ${response.status}`);
+                }
+
+                console.log('✅ Supabase 저장 성공');
+                return { success: true };
+
+            } catch (error) {
+                console.error('Supabase 저장 실패:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Google Sheets에 저장
+        async function saveToGoogleSheet(data) {
+            try {
+                // Google Script URL이 설정되지 않았으면 건너뛰기
+                if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
+                    console.log('Google Sheets가 설정되지 않았습니다.');
+                    return { success: false, message: 'Not configured' };
+                }
+
+                // 데이터를 평탄화 (flatten)
+                const flatData = flattenData(data);
+
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(surveyData)
+                    body: JSON.stringify(flatData)
                 });
-                
-                // no-cors 모드에서는 응답을 읽을 수 없으므로 성공으로 간주
-                alert('설문 응답이 성공적으로 제출되었습니다!\n감사합니다.');
-                
-                // 백업용 다운로드도 제공
-                downloadData();
-                
+
+                // no-cors 모드에서는 응답을 확인할 수 없으므로 성공으로 간주
+                console.log('✅ Google Sheets 저장 요청 전송 완료');
+                return { success: true };
+
             } catch (error) {
-                console.error('Error:', error);
-                alert('전송 중 오류가 발생했습니다.\n데이터를 다운로드하여 관리자에게 보내주세요.(email: eyang@kipf.re.kr)');
-                downloadData();
+                console.error('Google Sheets 저장 실패:', error);
+                return { success: false, error: error.message };
             }
         }
-        
-        // 데이터 다운로드 (백업용)
-        function downloadData() {
-            surveyData.timestamp = new Date().toISOString();
-            const dataStr = JSON.stringify(surveyData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `survey-response-${Date.now()}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
+
+        // 데이터 평탄화 (Google Sheets용)
+        function flattenData(data) {
+            const flat = {
+                timestamp: data.timestamp,
+                consent: data.consent,
+                organization: data.demographics.organization,
+                grade: data.demographics.grade,
+                jobType: data.demographics.jobType,
+                tenure: data.demographics.tenure,
+                birthYear: data.demographics.birthYear,
+                gender: data.demographics.gender,
+                education: data.demographics.education,
+                maritalStatus: data.demographics.maritalStatus,
+                children: data.demographics.children,
+                A1: data.surveyA.A1,
+                A2: data.surveyA.A2,
+                A3: data.surveyA.A3,
+                A4: data.surveyA.A4,
+                B1: data.surveyB.B1,
+                B2: data.surveyB.B2,
+                B3: data.surveyB.B3,
+                C1: data.surveyC.C1,
+                C2: data.surveyC.C2,
+                C3: data.surveyC.C3,
+                D1: data.surveyD.D1,
+                D2: data.surveyD.D2,
+                D3: data.surveyD.D3,
+                currentSystemIntention: data.currentSystemIntention
+            };
+
+            // 비네트 데이터 추가
+            data.vignettes.forEach((vignette, index) => {
+                flat[`vignette${index + 1}_baseSalary`] = vignette.conditions.baseSalary;
+                flat[`vignette${index + 1}_jobPay`] = vignette.conditions.jobPay;
+                flat[`vignette${index + 1}_performancePay`] = vignette.conditions.performancePay;
+                flat[`vignette${index + 1}_rotation`] = vignette.conditions.rotation;
+                flat[`vignette${index + 1}_authority`] = vignette.conditions.authority;
+                flat[`vignette${index + 1}_intention`] = vignette.intention;
+            });
+
+            return flat;
         }
+
+        // 백업 파일 다운로드
+        function downloadBackup(data) {
+            try {
+                const jsonString = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `survey_backup_${new Date().getTime()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log('✅ 백업 파일 다운로드 완료');
+            } catch (error) {
+                console.error('백업 파일 다운로드 실패:', error);
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        window.onload = function() {
+            document.getElementById('page-0').classList.add('active');
+        };
     </script>
 </body>
 </html>
