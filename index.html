@@ -1439,9 +1439,13 @@
         // 비네트 시나리오 생성
         function generateVignettes() {
             vignetteScenarios = [];
-            for (let i = 0; i < 10; i++) {
+            let attempts = 0;
+            const maxAttempts = 1000;  // 무한 루프 방지
+            
+            while (vignetteScenarios.length < 10 && attempts < maxAttempts) {
+                attempts++;
                 const scenario = {
-                    id: i + 1,
+                    id: vignetteScenarios.length + 1,
                     baseSalary: vignetteConditions.baseSalary[Math.floor(Math.random() * 3)],
                     jobPay: vignetteConditions.jobPay[Math.floor(Math.random() * 3)],
                     performancePay: vignetteConditions.performancePay[Math.floor(Math.random() * 2)],
@@ -1582,10 +1586,21 @@
 
         function nextVignette(index) {
             const slider = document.getElementById(`vignette-slider-${index}`);
+
+            // 슬라이더 값을 안전하게 읽기 (기본값 50 보장)
+            let intentionValue = 50;  // 기본값
+            if (slider && slider.value !== undefined && slider.value !== null && slider.value !== '') {
+                intentionValue = parseInt(slider.value);
+                // NaN 체크
+                if (isNaN(intentionValue)) {
+                    intentionValue = 50;
+                }
+            }
+
             surveyData.vignettes.push({
                 scenarioId: index + 1,
                 conditions: vignetteScenarios[index],
-                intention: parseInt(slider.value)
+                intention: intentionValue
             });
 
             if (index === 9) {
@@ -1632,7 +1647,18 @@
         // 현행 제도 평가 저장 및 비네트 시작
         function saveCurrentSystemAndStart() {
             const slider = document.getElementById('current-system-slider');
-            surveyData.currentSystemIntention = parseInt(slider.value);
+
+             // 슬라이더 값을 안전하게 읽기 (기본값 50 보장)
+            let intentionValue = 50;  // 기본값
+            if (slider && slider.value !== undefined && slider.value !== null && slider.value !== '') {
+                intentionValue = parseInt(slider.value);
+                // NaN 체크
+                if (isNaN(intentionValue)) {
+                    intentionValue = 50;
+                }
+            }
+
+            surveyData.currentSystemIntention = intentionValue;
             startVignettes();
         }
 
